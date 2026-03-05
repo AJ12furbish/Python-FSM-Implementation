@@ -48,7 +48,7 @@ This FSM framework provides a clean separation between **states**, **transitions
 │   │              FSM                │   │
 │   │                                 │   │
 │   │  ┌──────────┐   ┌──────────┐    │   │
-│   │  │  State A │──▶│  State B │   │   │
+│   │  │  State A │-->│  State B │    │   │
 │   │  └──────────┘   └──────────┘    │   │
 │   │       │    transition()    │    │   │
 │   │       └────────────────────┘    │   │
