@@ -351,7 +351,7 @@ The FSM checks `isValid()` before committing to a state change. This allows cond
 **The container solely holds data.**
 States and transitions access game/system data through `self.FSM.container`. This keeps state logic decoupled from the broader application — states query and react, but don't own the data.
 
-**Extend the classes; do not modify them. **
+**Extend the classes; do not modify them.**
 All three classes (`FSM`, `State`, `transition`) are designed to be subclassed. The base implementations provide safe defaults, so you only override what you need to add custom functionality. 
 
 ---
