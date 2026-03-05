@@ -84,7 +84,7 @@ The base class for all states. Each state has three lifecycle methods:
 | `execute()` | Main logic, called every tick |        ✅ Yes           |
 | `exit()`    | Cleanup when state is exited  |        ❌ No            |
 
-States also manage their own transitions via `addTransition()` and request state changes via `toTransition()`.
+States also manage their own transitions via `addTransition()` in '__init__' and request state changes via `toTransition()`.
 
 ---
 
