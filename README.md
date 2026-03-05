@@ -348,11 +348,11 @@ The state's `execute()` method evaluates conditions and calls `toTransition()` w
 **Transitions are validated before executing.**
 The FSM checks `isValid()` before committing to a state change. This allows conditions to be re-evaluated at execution time, not just at the moment the transition is requested.
 
-**The container is the source of truth.**
+**The container solely holds data.**
 States and transitions access game/system data through `self.FSM.container`. This keeps state logic decoupled from the broader application — states query and react, but don't own the data.
 
-**Extend, don't modify.**
-All three classes (`FSM`, `State`, `transition`) are designed to be subclassed. The base implementations provide safe defaults so you only override what you need.
+**Extend the classes; do not modify them. ****
+All three classes (`FSM`, `State`, `transition`) are designed to be subclassed. The base implementations provide safe defaults, so you only override what you need to add custom functionality. 
 
 ---
 
