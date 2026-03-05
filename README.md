@@ -41,15 +41,15 @@ This FSM framework provides a clean separation between **states**, **transitions
 
 ```
 ┌─────────────────────────────────────────┐
-│               Container                  │
-│  (your game object, agent, system, etc.) │
+│               Container                 │
+│  (your game object, agent, system, etc.)│
 │                                         │
 │   ┌─────────────────────────────────┐   │
 │   │              FSM                │   │
 │   │                                 │   │
-│   │  ┌──────────┐   ┌──────────┐   │   │
+│   │  ┌──────────┐   ┌──────────┐    │   │
 │   │  │  State A │──▶│  State B │   │   │
-│   │  └──────────┘   └──────────┘   │   │
+│   │  └──────────┘   └──────────┘    │   │
 │   │       │    transition()    │    │   │
 │   │       └────────────────────┘    │   │
 │   └─────────────────────────────────┘   │
@@ -78,11 +78,11 @@ The central manager. Holds references to all states, tracks the current and prev
 
 The base class for all states. Each state has three lifecycle methods:
 
-| Method | Purpose | Can call `toTransition`? |
-|--------|---------|--------------------------|
-| `enter()` | Setup when state is entered | ❌ No |
-| `execute()` | Main logic, called every tick | ✅ Yes |
-| `exit()` | Cleanup when state is exited | ❌ No |
+|    Method   |            Purpose            | Can call `toTransition`? |
+|-------------|-------------------------------|--------------------------|
+| `enter()`   | Setup when state is entered   |        ❌ No            |
+| `execute()` | Main logic, called every tick |        ✅ Yes           |
+| `exit()`    | Cleanup when state is exited  |        ❌ No            |
 
 States also manage their own transitions via `addTransition()` and request state changes via `toTransition()`.
 
@@ -279,58 +279,58 @@ person.update()               # → I am awake.
 
 ### `FSM(container, debug=False)`
 
-| Method | Signature | Description |
-|--------|-----------|-------------|
-| `addState` | `(stateName: str, stateObj: State)` | Registers a state under the given name |
-| `setState` | `(stateName: str)` | Sets the active state (does not call `enter()`) |
-| `toTransition` | `(transName: str)` | Queues a transition for evaluation on the next `execute()` call |
-| `execute` | `()` | Runs one tick: evaluates the queued transition (if any), then runs the current state's `execute()` |
+|     Method     |             Signature               |                                 Description                                                        |
+|----------------|-------------------------------------|----------------------------------------------------------------------------------------------------|
+| `addState`     | `(stateName: str, stateObj: State)` | Registers a state under the given name                                                             |
+| `setState`     | `(stateName: str)`                  | Sets the active state (does not call `enter()`)                                                    |
+| `toTransition` | `(transName: str)`                  | Queues a transition for evaluation on the next `execute()` call                                    |
+| `execute`      | `()`                                | Runs one tick: evaluates the queued transition (if any), then runs the current state's `execute()` |
 
 **Properties:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `curState` | `State` | The currently active state object |
-| `prevState` | `State` | The previously active state object |
-| `container` | `object` | Reference to the owning container |
-| `debug` | `bool` | Enables debug output |
+|  Property   |   Type    |          Description               |
+|-------------|-----------|------------------------------------|
+| `curState`  | `State`   | The currently active state object  |
+| `prevState` | `State`   | The previously active state object |
+| `container` | `object`  | Reference to the owning container  |
+| `debug`     | `bool`    | Enables debug output               |
 
 ---
 
 ### `State(FSM)`
 
-| Method | Signature | Description |
-|--------|-----------|-------------|
-| `enter` | `()` | Called once when the state is entered. Override for setup logic. |
-| `execute` | `()` | Called every tick while this is the active state. Override for main behavior. |
-| `exit` | `()` | Called once when the state is exited. Override for cleanup logic. |
-| `addTransition` | `(transName: str, transitionObj: transition)` | Registers a transition on this state |
-| `toTransition` | `(transName: str)` | Requests a transition by name (only valid inside `execute()`) |
+|     Method      |                   Signature                   |                             Description                                       |
+|-----------------|-----------------------------------------------|-------------------------------------------------------------------------------|
+| `enter`         | `()`                                          | Called once when the state is entered. Override for setup logic.              |
+| `execute`       | `()`                                          | Called every tick while this is the active state. Override for main behavior. |
+| `exit`          | `()`                                          | Called once when the state is exited. Override for cleanup logic.             |
+| `addTransition` | `(transName: str, transitionObj: transition)` | Registers a transition on this state                                          |
+| `toTransition`  | `(transName: str)`                            | Requests a transition by name (only valid inside `execute()`)                 |
 
 **Properties:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `FSM` | `FSM` | Reference to the owning FSM |
-| `name` | `str` | Name of the state (defaults to class name) |
-| `transitions` | `dict` | Dictionary of registered transitions |
+|   Property    |  Type  |             Description                    |
+|---------------|--------|--------------------------------------------|
+| `FSM`         | `FSM`  | Reference to the owning FSM                |
+| `name`        | `str`  | Name of the state (defaults to class name) |
+| `transitions` | `dict` | Dictionary of registered transitions       |
 
 ---
 
 ### `transition(toState, condition=None, debug=False)`
 
-| Method | Signature | Description |
-|--------|-----------|-------------|
-| `isValid` | `()` | Returns `True` if the condition function passes (or if no condition is set) |
-| `execute` | `()` | Called when the transition fires. Override to add transition-specific logic. |
+|   Method  | Signature |                             Description                                      |
+|-----------|-----------|------------------------------------------------------------------------------|
+| `isValid` | `()`      | Returns `True` if the condition function passes (or if no condition is set)  |
+| `execute` | `()`      | Called when the transition fires. Override to add transition-specific logic. |
 
 **Properties:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `toState` | `str` | Name of the target state |
+|   Property  |       Type         |                     Description                         |
+|-------------|--------------------|---------------------------------------------------------|
+| `toState`   | `str`              | Name of the target state                                |
 | `condition` | `callable \| None` | Function that returns `bool`; `None` means always valid |
-| `debug` | `bool` | If `True`, prints a message on execution |
+| `debug`     | `bool`             | If `True`, prints a message on execution                |
 
 ---
 
