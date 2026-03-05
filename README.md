@@ -247,30 +247,36 @@ class Awake(State):
 # --- Container ---
 class Person:
     def __init__(self):
+        # Add any attributes to access from the container (self.FSM.container)
         self.alarm_triggered = False
 
+        # Create the FSM, passing a reference to self as the container 
         self.FSM = FSM(self, debug=True)
 
+        # Create custom state objects
         sleeping = Sleeping(self.FSM)
         awake    = Awake(self.FSM)
 
+        # Register states with the FSM
         self.FSM.addState('sleeping', sleeping)
         self.FSM.addState('awake',    awake)
 
+        # Register transitions between states
         sleeping.addTransition('toAwake', transition('awake'))
 
+        # Set the initial state
         self.FSM.setState('sleeping')
-        self.FSM.curState.enter()
 
-    def update(self):
+    def execute(self):
         self.FSM.execute()
 
 # --- Run ---
-person = Person()
-person.update()               # → Zzz...
-person.alarm_triggered = True
-person.update()               # → Waking up! / I am awake.
-person.update()               # → I am awake.
+if '__name__' == '__main__':
+  person = Person()
+  person.execute()               # → Zzz...
+  person.alarm_triggered = True
+  person.execute()               # → Waking up! / I am awake.
+  person.execute()               # → I am awake.
 ```
 
 ---
